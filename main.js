@@ -118,10 +118,5 @@ const changeColor = (e) => {
     });
 };
 
-const debouncing = (func, timeout = 300) => {
-  clearTimeout(timerId);
-  timerId = setTimeout(func, timeout);
-};
-
 const $container = document.querySelector(".container");
 $container.onmousemove = (e) => changeColor(e);
