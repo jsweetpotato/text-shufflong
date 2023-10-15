@@ -51,7 +51,7 @@ const change = [
 ];
 
 // 컬러 파레트
-const colorPalette = ["#144201", "#217000", "#30a300", "#41de00"];
+const colorPalette = ["#144201", "#217000", "#17ff00", "#0b7800"];
 
 // textbox의 span들 2차 배열로 저장
 const spansArr = Array.from($textboxs, (textbox) => {
@@ -68,9 +68,7 @@ const originalText = Array.from($textboxs, (textbox) => {
 // textboxs 순서대로 하나씩 i * 100 간격으로 changeCharacter 함수 실행
 const animate = () => {
   for (let i = 0; i < spansArr.length; i++) {
-    setTimeout(() => {
-      changeCharacter(spansArr[i], originalText[i]);
-    }, i * 100);
+    setTimeout(changeCharacter, i * 100, spansArr[i], originalText[i]);
   }
 };
 
@@ -97,3 +95,33 @@ const changeCharacter = (spans, originalText) => {
 animate();
 
 document.querySelector("#replay-btn").onclick = () => animate();
+
+// 마우스 이벤트
+
+const changeColor = (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+  if (e.target.nodeName !== "SPAN") return;
+  e.target
+    .closest("p")
+    .querySelectorAll(".split-text")
+    .forEach((span, idx) => {
+      const change = (state) => {
+        if (state === "animating") {
+          return (span.style.color =
+            colorPalette[Math.floor(Math.random() * 4)]);
+        } else span.style.color = "white";
+      };
+
+      setTimeout(change, idx * 20, "animating");
+      setTimeout(change, idx * 70, "animationend");
+    });
+};
+
+const debouncing = (func, timeout = 300) => {
+  clearTimeout(timerId);
+  timerId = setTimeout(func, timeout);
+};
+
+const $container = document.querySelector(".container");
+$container.onmousemove = (e) => changeColor(e);
